@@ -1,3 +1,49 @@
+# Arduino
+*.elf
+*.hex
+*.bin
+*.eep
+*.map
+*.dmp
+*.obj
+*.o
+*.a
+*.sdf
+*.dep
+*.d
+*.log
+*.pyc
+*.swp
+.vscode/
+build/
+*.ino.*.cpp
+*.ino.*.bin
+*.ino.*.hex
+*.ino.*.elf
+*.ino.*.eep
+*.ino.*.map
+*.ino.*.dmp
+*.ino.*.obj
+*.ino.*.o
+*.ino.*.a
+*.ino.*.sdf
+*.ino.*.dep
+*.ino.*.d
+*.ino.*.log
+*.ino.*.pyc
+*.ino.*.swp
+__pycache__/
+*.DS_Store
+*.tmp
+*.bak
+*.backup
+*.orig
+*.save
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+*.vscode/
+
 # Prerequisites
 *.d
 
@@ -39,3 +85,4 @@
 
 # debug information files
 *.dwo
+

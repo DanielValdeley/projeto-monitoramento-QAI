@@ -1,4 +1,4 @@
-# projeto-tcc2
+# Monitoramento da Qualidade Interna do Ar (QAI)
 Código do desenvolvimento
 
 ### Placa
@@ -10,7 +10,7 @@ Código do desenvolvimento
 - Escutar canal mosquitto
 
 ```bash
-mosquitto_sub -h 192.168.50.20 -t "sensores/temp" -u admin -P paulvandyk11
+mosquitto_sub -h 192.168.50.20 -t "sensores/temp" -u <usuario> -P <senha>
 ```
 
 ### Resultado DashBoard - Node-RED

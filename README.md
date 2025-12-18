@@ -15,4 +15,4 @@ mosquitto_sub -h 192.168.50.20 -t "sensores/temp" -u <usuario> -P <senha>
 
 ### Resultado DashBoard - Node-RED
 
-![Resultado](/figuras/dashboard-leitura-sensores.png)
+[Vídeo demonstrativo do dashboard](https://drive.google.com/file/d/1WPwRLWm8pIGT7dQfDKFMVquZhQgwAq4i/view?usp=sharing)

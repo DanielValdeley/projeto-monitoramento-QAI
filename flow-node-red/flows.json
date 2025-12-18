@@ -1,0 +1,1360 @@
+[
+    {
+        "id": "8c38b50192445feb",
+        "type": "tab",
+        "label": "projeto-tcc2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqtt_in_esp32",
+        "type": "mqtt in",
+        "z": "8c38b50192445feb",
+        "name": "MQTT ESP32",
+        "topic": "sensores/esp32",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "mqtt_broker",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "be0209310fe24bc7",
+                "748f02950f9f3604",
+                "6ba1b2d7cae6bc69",
+                "6a45636891c4b302",
+                "dc45c591ba40b6cf",
+                "f356aeef49c16a95",
+                "1927c9d9f9f25772",
+                "9871bebe91d1cbb2",
+                "e29f1e74b8fa2b92",
+                "c2e9e49571230b0b",
+                "23591f5f60f8586a",
+                "18701f906a971ab5",
+                "376c98c11b9b76e7",
+                "3aaaad1e3ce8c3d6",
+                "1a3df1a87c2cceeb",
+                "1d0dc5248b8288c5",
+                "0a943bdf5bd2c3d9",
+                "c1751d235c630a67",
+                "c58d198ed383a994"
+            ]
+        ]
+    },
+    {
+        "id": "be0209310fe24bc7",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Formatar SQL Insert",
+        "func": "var co2 = msg.payload.co2;\nvar temp = msg.payload.temperatura;\nvar umi = msg.payload.umidade;\nvar pm1_0 = msg.payload[\"pm1.0\"];\nvar pm2_5 = msg.payload[\"pm2.5\"];\nvar pm4_0 = msg.payload[\"pm4.0\"];\nvar pm10_0 = msg.payload[\"pm10.0\"];\nvar vocIndex = msg.payload.vocIndex;\nvar noxIndex = msg.payload.noxIndex;\n\nmsg.topic = `INSERT INTO LeituraSensor (\n    co2, \n    temperatura, \n    umidade, \n    pm1_0,\n    pm2_5,\n    pm4_0,\n    pm10_0,\n    vocIndex,\n    noxIndex\n    ) \n    VALUES (\n        ${co2}, \n        ${temp}, \n        ${umi}, \n        ${pm1_0},\n        ${pm2_5},\n        ${pm4_0},\n        ${pm10_0},\n        ${vocIndex},\n        ${noxIndex}\n        );`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 260,
+        "wires": [
+            [
+                "3e06309a85059c47"
+            ]
+        ]
+    },
+    {
+        "id": "3e06309a85059c47",
+        "type": "mysql",
+        "z": "8c38b50192445feb",
+        "mydb": "mysql-config",
+        "name": "MySQL Insert",
+        "x": 620,
+        "y": 260,
+        "wires": [
+            [
+                "f88024bf80f133d9"
+            ]
+        ]
+    },
+    {
+        "id": "f88024bf80f133d9",
+        "type": "debug",
+        "z": "8c38b50192445feb",
+        "name": "Debug MySQL",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6ba1b2d7cae6bc69",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "Temperatura",
+        "group": "59d3c735432b9ed5",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "TEMPERATURA",
+        "label": "°C",
+        "format": "{{msg.payload.temperatura | number:1}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#9aeef9",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "25",
+        "seg2": "27",
+        "diff": false,
+        "className": "",
+        "x": 370,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "748f02950f9f3604",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "Umidade",
+        "group": "1c58a85e3c73c25b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "wave",
+        "title": "UMIDADE",
+        "label": "%",
+        "format": "{{msg.payload.umidade}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "dc45c591ba40b6cf",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "CO2",
+        "group": "c951409f2207c557",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "donut",
+        "title": "CO₂",
+        "label": "ppm",
+        "format": "{{msg.payload.co2 | number:0}}",
+        "min": 0,
+        "max": "2000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "800",
+        "seg2": "1200",
+        "diff": false,
+        "className": "",
+        "x": 350,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6a45636891c4b302",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "PM 1.0",
+        "group": "b7a3f6740d80373e",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "PM 1.0",
+        "label": "µg/m³",
+        "format": "{{msg.payload['pm1.0']}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "54",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "f9d179a0b0a0cc70",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Serie",
+        "func": "let rows = msg.payload;\nlet serie = [];\n\nrows.forEach(row => {\n    if (row.valor > 0) {\n        let t = new Date(row.data_hora).getTime();\n        serie.push({ x: t, y: row.valor });\n    }\n});\n\nmsg.payload = [{\n    series: [msg.variavelLabel],\n    data: [serie],\n    labels: [\"\"]\n}];\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 180,
+        "wires": [
+            [
+                "1499b44f4cf02a03"
+            ]
+        ]
+    },
+    {
+        "id": "1499b44f4cf02a03",
+        "type": "ui_chart",
+        "z": "8c38b50192445feb",
+        "name": "",
+        "group": "0c51e0174d4fac62",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "auto",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "30",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1130,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "be0b953237bd2c58",
+        "type": "ui_dropdown",
+        "z": "8c38b50192445feb",
+        "name": "Periodo",
+        "label": "Período",
+        "tooltip": "Altere o elemento e o período para atualizar",
+        "place": "selecione o periodo",
+        "group": "0c51e0174d4fac62",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Ultima hora",
+                "value": "1h",
+                "type": "str"
+            },
+            {
+                "label": "Ultimas 24 horas",
+                "value": "1",
+                "type": "str"
+            },
+            {
+                "label": "Ultimos 7 dias",
+                "value": "7",
+                "type": "str"
+            },
+            {
+                "label": "Ultimos 30 dias",
+                "value": "30",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "periodo",
+        "topicType": "str",
+        "className": "",
+        "x": 100,
+        "y": 120,
+        "wires": [
+            [
+                "dbb103ebc58750dd"
+            ]
+        ]
+    },
+    {
+        "id": "65fea5826ec26195",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Consulta por periodo e elemento",
+        "func": "let periodo = msg.payload.periodo || '1';\nlet variavel = msg.payload.variavel || 'co2';\n\nlet campos = {\n    co2:         { campo: 'co2',         label: 'CO₂ (ppm)'        },\n    temperatura: { campo: 'temperatura', label: 'Temperatura (°C)' },\n    umidade:     { campo: 'umidade',     label: 'Umidade (%)'      },\n    pm1_0:       { campo: 'pm1_0',       label: 'PM 1.0 (µg/m³)'   },\n    pm2_5:       { campo: 'pm2_5',       label: 'PM 2.5 (µg/m³)'   },\n    pm4_0:       { campo: 'pm4_0',       label: 'PM 4.0 (µg/m³)'   },\n    pm10_0:      { campo: 'pm10_0',      label: 'PM 10.0 (µg/m³)'  },\n    vocIndex:    { campo: 'vocIndex',    label: 'VOCs (Índice)'    },\n    noxIndex:    { campo: 'noxIndex',    label: 'NOx (Índice)'     }\n};\n\nif (!campos[variavel]) variavel = 'co2';\n\nlet intervalo;\nswitch (periodo) {\n    case '1h': intervalo = 'INTERVAL 1 HOUR'; break;\n    case '1':  intervalo = 'INTERVAL 1 DAY'; break;\n    case '7':  intervalo = 'INTERVAL 7 DAY'; break;\n    case '30': intervalo = 'INTERVAL 30 DAY'; break;\n    default:   intervalo = 'INTERVAL 1 DAY';\n}\n\nmsg.topic = `\nSELECT ${campos[variavel].campo} AS valor, data_hora\nFROM LeituraSensor\nWHERE data_hora >= NOW() - ${intervalo}\nORDER BY data_hora ASC;\n`;\n\nmsg.variavelLabel = campos[variavel].label;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "851d9889842a42af"
+            ]
+        ]
+    },
+    {
+        "id": "4e130b04c52fb49b",
+        "type": "ui_dropdown",
+        "z": "8c38b50192445feb",
+        "name": "Elemento",
+        "label": "Elemento",
+        "tooltip": "Altere o elemento e o período para atualizar",
+        "place": "selecione o elemento",
+        "group": "0c51e0174d4fac62",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "CO₂ (ppm)",
+                "value": "co2",
+                "type": "str"
+            },
+            {
+                "label": "Temperatura (°C)",
+                "value": "temperatura",
+                "type": "str"
+            },
+            {
+                "label": "Umidade (%)",
+                "value": "umidade",
+                "type": "str"
+            },
+            {
+                "label": "PM 1.0 (µg/m³)",
+                "value": "pm1_0",
+                "type": "str"
+            },
+            {
+                "label": "PM 2.5 (µg/m³)",
+                "value": "pm2_5",
+                "type": "str"
+            },
+            {
+                "label": "PM 4.0 (µg/m³)",
+                "value": "pm4_0",
+                "type": "str"
+            },
+            {
+                "label": "PM 10.0 (µg/m³)",
+                "value": "pm10_0",
+                "type": "str"
+            },
+            {
+                "label": "VOCs (Índice)",
+                "value": "vocIndex",
+                "type": "str"
+            },
+            {
+                "label": "NOx (Índice)",
+                "value": "noxIndex",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "variavel",
+        "topicType": "str",
+        "className": "",
+        "x": 100,
+        "y": 180,
+        "wires": [
+            [
+                "dbb103ebc58750dd"
+            ]
+        ]
+    },
+    {
+        "id": "851d9889842a42af",
+        "type": "mysql",
+        "z": "8c38b50192445feb",
+        "mydb": "mysql-config",
+        "name": "MySQL Consulta",
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [
+                "f9d179a0b0a0cc70"
+            ]
+        ]
+    },
+    {
+        "id": "dbb103ebc58750dd",
+        "type": "join",
+        "z": "8c38b50192445feb",
+        "name": "join",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 270,
+        "y": 180,
+        "wires": [
+            [
+                "65fea5826ec26195"
+            ]
+        ]
+    },
+    {
+        "id": "f356aeef49c16a95",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "PM 2.5",
+        "group": "b8ec7e3ccdbbed5d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "PM 2.5",
+        "label": "µg/m³",
+        "format": "{{msg.payload['pm2.5']}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "54",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "1927c9d9f9f25772",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "PM 4.0",
+        "group": "58b327156e6e5dca",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "PM 4.0",
+        "label": "µg/m³",
+        "format": "{{msg.payload['pm4.0']}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "54",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "9871bebe91d1cbb2",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "PM 10.0",
+        "group": "8395f219494ebd3b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "PM 10.0",
+        "label": "µg/m³",
+        "format": "{{msg.payload['pm10.0']}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "54",
+        "seg2": "70",
+        "diff": false,
+        "className": "",
+        "x": 360,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "1d0dc5248b8288c5",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "VOCs",
+        "group": "098fd1f62104a520",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "VOCs",
+        "label": "Índice",
+        "format": "{{msg.payload.vocIndex}}",
+        "min": 0,
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "200",
+        "seg2": "300",
+        "diff": false,
+        "className": "",
+        "x": 350,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "ef44fa573fed1683",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "5950987235260d82",
+        "name": "Home page",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    .landing-container {\n        padding: 20px;\n        text-align: center;\n        color: #eee;\n    }\n\n    .landing-title {\n        font-size: 26px;\n        font-weight: 600;\n        margin-bottom: 10px;\n        color: #00bcd4;\n    }\n\n    .landing-subtitle {\n        font-size: 14px;\n        opacity: 0.8;\n        margin-bottom: 25px;\n    }\n\n    .btn-grid {\n        display: grid;\n        grid-template-columns: 1fr;\n        gap: 15px;\n        margin-bottom: 30px;\n    }\n\n    .landing-btn {\n        padding: 18px;\n        font-size: 18px;\n        border-radius: 8px;\n        border: none;\n        cursor: pointer;\n        font-weight: 500;\n        transition: transform 0.1s, opacity 0.1s;\n    }\n\n    .landing-btn:hover {\n        transform: scale(1.02);\n        opacity: 0.9;\n    }\n\n    .btn-info {\n        background-color: #607d8b;\n        color: white;\n    }\n\n    .btn-live {\n        background-color: #4caf50;\n        color: white;\n    }\n\n    .btn-history {\n        background-color: #ff9800;\n        color: white;\n    }\n\n    .info-box {\n        text-align: left;\n        background: #2b2b2b;\n        padding: 15px;\n        border-radius: 8px;\n        font-size: 13px;\n        line-height: 1.5;\n    }\n\n    .info-box h3 {\n        margin-top: 0;\n        color: #00bcd4;\n    }\n</style>\n\n<div class=\"landing-container\">\n\n    <div class=\"landing-title\">\n        Monitoramento da Qualidade do Ar\n    </div>\n\n    <div class=\"landing-subtitle\">\n        Sistema de aquisição, visualização e análise de dados ambientais\n    </div>\n\n    <!-- BOTÕES -->\n    <div class=\"btn-grid\">\n\n        <button class=\"landing-btn btn-live\"\n            ng-click=\"send({payload:'leitura', topic:'nav'})\">\n            Leitura dos Sensores\n        </button>\n\n        <button class=\"landing-btn btn-history\"\n            ng-click=\"send({payload:'historico', topic:'nav'})\">\n            📈 Histórico dos Sensores\n        </button>\n\n        <button class=\"landing-btn btn-info\"\n            ng-click=\"send({payload:'info', topic:'nav'})\">\n            ℹ️ Qualidade do Ar e Saúde\n        </button>\n    </div>\n\n    <!-- INFORMAÇÕES -->\n    <div class=\"info-box\">\n        <h3>Sobre o sistema</h3>\n        <p>\n            Este dashboard apresenta dados de qualidade do ar interno,\n            adquiridos por sensores ambientais e armazenados em banco\n            de dados relacional.\n        </p>\n\n        <p><strong>Variáveis monitoradas:</strong></p>\n        <ul>\n            <li>CO₂ (ppm)</li>\n            <li>Temperatura (°C)</li>\n            <li>Umidade relativa (%)</li>\n            <li>Material particulado: PM1, PM2.5, PM4 e PM10 (µg/m³)</li>\n            <li>VOC Index (1–500)</li>\n            <li>NOx Index (1–500)</li>\n        </ul>\n\n        <p><strong>Material particulado detectado:</strong></p>\n        <ul>\n            <li>0.3–1.0 µm (PM1)</li>\n            <li>0.3–2.5 µm (PM2.5)</li>\n            <li>0.3–4.0 µm (PM4)</li>\n            <li>0.3–10.0 µm (PM10)</li>\n        </ul>\n\n        <p>\n            <strong>Precisão:</strong> ±5 µg/m³ ou ±5% do valor medido,\n            conforme a faixa de concentração.\n        </p>\n    </div>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 110,
+        "y": 40,
+        "wires": [
+            [
+                "b384b9ba9ba0c87a"
+            ]
+        ]
+    },
+    {
+        "id": "3dda0f91dcf503ca",
+        "type": "ui_ui_control",
+        "z": "8c38b50192445feb",
+        "name": "",
+        "events": "all",
+        "x": 540,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b384b9ba9ba0c87a",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "controle de paginas",
+        "func": "if (msg.topic === 'nav') {\n    switch (msg.payload) {\n        case 'info':\n            msg.payload = { tab: \"Informações\" };\n            break;\n        case 'leitura':\n            msg.payload = { tab: \"Leitura dos sensores\" };\n            break;\n        case 'historico':\n            msg.payload = { tab: \"Histórico\" };\n            break;\n        default:\n            return null;\n    }\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 40,
+        "wires": [
+            [
+                "3dda0f91dcf503ca"
+            ]
+        ]
+    },
+    {
+        "id": "6665f73ab2b04b6e",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "ade3b21ccc7debf3",
+        "name": "Info Qualidade do Ar e Saúde",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<div style=\"font-family: Arial, Helvetica, sans-serif; padding:20px; max-width:1000px; margin:auto;\">\n\n    <h1 style=\"color:#2c3e50;\">ℹ️ Informações do Sistema – Qualidade do Ar e Saúde</h1>\n\n    <p style=\"font-size:16px; line-height:1.6;\">\n        Esta página apresenta informações sobre os parâmetros monitorados pelo sistema de qualidade do ar interno\n        e seus possíveis <strong>impactos à saúde humana</strong>. O objetivo é auxiliar o usuário na interpretação\n        dos dados e conscientizar sobre a importância do monitoramento ambiental contínuo.\n    </p>\n\n    <hr>\n\n    <h2>🌬️ Dióxido de Carbono (CO₂)</h2>\n    <p>\n        O dióxido de carbono é um gás naturalmente presente no ar, sendo produzido principalmente pela respiração\n        humana e por processos de combustão. Em ambientes fechados, níveis elevados indicam ventilação inadequada.\n    </p>\n    <ul>\n        <li><strong>Até 800 ppm:</strong> Qualidade do ar considerada boa.</li>\n        <li><strong>800–1200 ppm:</strong> Pode causar sonolência e queda de concentração.</li>\n        <li><strong>1200–2000 ppm:</strong> Dor de cabeça, fadiga e desconforto.</li>\n        <li><strong>&gt; 2000 ppm:</strong> Tontura, náusea e impacto cognitivo significativo.</li>\n    </ul>\n    <p><strong>Recomendação:</strong> melhorar a ventilação do ambiente.</p>\n\n    <hr>\n\n    <h2>🌡️ Temperatura do Ar</h2>\n    <p>\n        A temperatura influencia diretamente o conforto térmico, o bem-estar e o desempenho físico e mental\n        das pessoas em ambientes internos.\n    </p>\n    <ul>\n        <li><strong>Faixa recomendada:</strong> 20 °C a 26 °C</li>\n        <li>Temperaturas elevadas podem causar estresse térmico e fadiga.</li>\n        <li>Temperaturas baixas podem causar desconforto e rigidez muscular.</li>\n    </ul>\n\n    <hr>\n\n    <h2>💧 Umidade Relativa do Ar</h2>\n    <p>\n        A umidade relativa indica a quantidade de vapor de água presente no ar e está diretamente relacionada\n        à saúde respiratória.\n    </p>\n    <ul>\n        <li><strong>Ideal:</strong> 40% a 60%</li>\n        <li><strong>Abaixo de 30%:</strong> ressecamento da pele, olhos e vias respiratórias.</li>\n        <li><strong>Acima de 60%:</strong> favorece mofo, fungos e ácaros.</li>\n    </ul>\n\n    <hr>\n\n    <h2>🌫️ Material Particulado (PM)</h2>\n    <p>\n        O material particulado consiste em partículas microscópicas suspensas no ar que podem penetrar no\n        sistema respiratório, causando diversos problemas de saúde.\n    </p>\n    <ul>\n        <li><strong>PM1.0 (0,3–1,0 µm):</strong> partículas ultrafinas que atingem os alvéolos pulmonares.</li>\n        <li><strong>PM2.5 (0,3–2,5 µm):</strong> associadas a doenças respiratórias e cardiovasculares.</li>\n        <li><strong>PM4.0 (0,3–4,0 µm):</strong> penetram profundamente no trato respiratório.</li>\n        <li><strong>PM10 (0,3–10,0 µm):</strong> atingem as vias aéreas superiores.</li>\n    </ul>\n    <p>\n        Quanto menor a partícula, maior o potencial de dano à saúde, especialmente em exposições prolongadas.\n    </p>\n\n    <hr>\n\n    <h2>🧪 Índice de Compostos Orgânicos Voláteis (VOC Index)</h2>\n    <p>\n        Compostos Orgânicos Voláteis são gases emitidos por produtos de limpeza, tintas, móveis, solventes e\n        materiais de construção.\n    </p>\n    <ul>\n        <li><strong>Escala:</strong> 1 a 500 pontos</li>\n        <li>Valores elevados indicam pior qualidade do ar.</li>\n        <li>Podem causar dor de cabeça, irritação nos olhos e vias respiratórias.</li>\n    </ul>\n\n    <hr>\n\n    <h2>🧬 Índice de Óxidos de Nitrogênio (NOx Index)</h2>\n    <p>\n        Os óxidos de nitrogênio são gases provenientes principalmente de processos de combustão, como fogões a gás\n        e aquecedores.\n    </p>\n    <ul>\n        <li><strong>Escala:</strong> 1 a 500 pontos</li>\n        <li>Podem causar irritação pulmonar e agravamento de doenças respiratórias.</li>\n        <li>Exposição prolongada pode reduzir a função pulmonar.</li>\n    </ul>\n\n    <hr>\n\n    <h2>✅ Conclusão</h2>\n    <p>\n        O monitoramento contínuo da qualidade do ar interno permite identificar riscos invisíveis ao ser humano,\n        melhorar o conforto ambiental e prevenir problemas de saúde a curto e longo prazo.\n    </p>\n\n    <p style=\"margin-top:20px; font-size:14px; color:#555;\">\n        💡 Dica: avalie sempre os parâmetros em conjunto para uma análise mais precisa da qualidade do ar.\n    </p>\n\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 790,
+        "y": 40,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e29f1e74b8fa2b92",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição CO2",
+        "func": "let co2 = msg.payload.co2;\nlet descricao = \"\";\nlet classe = \"\";\n\nif (co2 <= 800) {\n    descricao = \"Qualidade do ar adequada. Ambiente bem ventilado.\";\n    classe = \"ok\";\n} else if (co2 <= 1500) {\n    descricao = \"Qualidade moderada. Pode causar sonolência e queda de concentração.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Qualidade ruim. Recomenda-se ventilação imediata.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: co2,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 340,
+        "wires": [
+            [
+                "0381940e3980d42e"
+            ]
+        ]
+    },
+    {
+        "id": "0381940e3980d42e",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "c951409f2207c557",
+        "name": "Template Descrição CO2",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 690,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c2e9e49571230b0b",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição Temperatura",
+        "func": "let temp = msg.payload.temperatura;\nlet descricao = \"\";\nlet classe = \"\";\n\nif (temp >= 20 && temp <= 27) {\n    descricao = \"Conforto térmico adequado. Ambiente agradável.\";\n    classe = \"ok\";\n} else if (temp < 20) {\n    descricao = \"Ambiente frio. Pode causar desconforto térmico.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Ambiente quente. Pode causar fadiga e mal-estar.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: temp,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 420,
+        "wires": [
+            [
+                "6ae388bc475bc227"
+            ]
+        ]
+    },
+    {
+        "id": "6ae388bc475bc227",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "59d3c735432b9ed5",
+        "name": "Template Descrição Temperatura",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 720,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "23591f5f60f8586a",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição Umidade",
+        "func": "let umidade = msg.payload.umidade;\nlet descricao = \"\";\nlet classe = \"\";\n\nif (umidade >= 40 && umidade <= 60) {\n    descricao = \"Umidade adequada. Conforto respiratório preservado.\";\n    classe = \"ok\";\n} else if (umidade < 40) {\n    descricao = \"Ar seco. Pode causar ressecamento e desconforto.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Ar úmido. Pode favorecer mofo e sensação abafada.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: umidade,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 500,
+        "wires": [
+            [
+                "8ebb24464e179f57"
+            ]
+        ]
+    },
+    {
+        "id": "8ebb24464e179f57",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "1c58a85e3c73c25b",
+        "name": "Template Descrição Umidade",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 710,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ce6f4416355da3e",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "b7a3f6740d80373e",
+        "name": "Template Descrição PM 1.0",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 700,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "18701f906a971ab5",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição PM 1.0",
+        "func": "var pm1_0 = msg.payload[\"pm1.0\"];\nlet descricao = \"\";\nlet classe = \"\";\n\nif (pm1_0 <= 50) {\n    descricao = \"Ar limpo. Baixa concentração de partículas ultrafinas.\";\n    classe = \"ok\";\n} else if (pm1_0 <= 80) {\n    descricao = \"Aumento de partículas ultrafinas. Pode afetar a respiração.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Alta concentração de partículas ultrafinas. Risco à saúde respiratória.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: pm1_0,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 580,
+        "wires": [
+            [
+                "5ce6f4416355da3e"
+            ]
+        ]
+    },
+    {
+        "id": "a708e52385de1261",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "b8ec7e3ccdbbed5d",
+        "name": "Template Descrição PM 2.5",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 700,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "376c98c11b9b76e7",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição PM 2.5",
+        "func": "var pm2_5 = msg.payload[\"pm2.5\"];\nlet descricao = \"\";\nlet classe = \"\";\n\nif (pm2_5 <= 50) {\n    descricao = \"Boa qualidade do ar. Baixa presença de partículas finas.\";\n    classe = \"ok\";\n} else if (pm2_5 <= 80) {\n    descricao = \"Concentração moderada de partículas finas. Pode causar irritação respiratória.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Alta concentração de partículas finas. Risco para vias respiratórias e coração.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: pm2_5,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 660,
+        "wires": [
+            [
+                "a708e52385de1261"
+            ]
+        ]
+    },
+    {
+        "id": "cef3a697d0d85072",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "58b327156e6e5dca",
+        "name": "Template Descrição PM 4.0",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 700,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3aaaad1e3ce8c3d6",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição PM 4.0",
+        "func": "var pm4_0 = msg.payload[\"pm4.0\"];\nlet descricao = \"\";\nlet classe = \"\";\n\nif (pm4_0 <= 50) {\n     descricao = \"Ar adequado. Baixa presença de partículas inaláveis.\";\n    classe = \"ok\";\n} else if (pm4_0 <= 80) {\n       descricao = \"Partículas inaláveis em nível moderado. Pode causar desconforto respiratório.\";\n    classe = \"alerta\";\n} else {\n     descricao = \"Alta presença de partículas inaláveis. Risco à saúde respiratória.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: pm4_0,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 740,
+        "wires": [
+            [
+                "cef3a697d0d85072"
+            ]
+        ]
+    },
+    {
+        "id": "a99ba5d7536367a9",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "8395f219494ebd3b",
+        "name": "Template Descrição PM 10.0",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 700,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1a3df1a87c2cceeb",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição PM 10.0",
+        "func": "var pm10_0 = msg.payload[\"pm10.0\"];\nlet descricao = \"\";\nlet classe = \"\";\n\nif (pm10_0 <= 50) {\n    descricao = \"Boa qualidade do ar. Baixa concentração de poeira inalável.\";\n    classe = \"ok\";\n} else if (pm10_0 <= 80) {\n    descricao = \"Concentração moderada de poeira inalável. Pode causar irritação.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Alta concentração de poeira inalável. Pode agravar problemas respiratórios.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: pm10_0,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 820,
+        "wires": [
+            [
+                "a99ba5d7536367a9"
+            ]
+        ]
+    },
+    {
+        "id": "0a943bdf5bd2c3d9",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição VOCs",
+        "func": "var voc = msg.payload.vocIndex;\nlet descricao = \"\";\nlet classe = \"\";\n\nif(voc <= 100) {\n    descricao = \"Ar limpo. Baixa presença de compostos voláteis.\";\n    classe = \"ok\";\n} else if (voc <= 200) {\n    descricao = \"Qualidade aceitável. Presença leve de compostos químicos.\";\n    classe = \"alerta\";\n} else if (voc <= 300) {\n    descricao = \"Qualidade reduzida. Pode causar desconforto.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Qualidade ruim. Possível risco à saúde.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: voc,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 900,
+        "wires": [
+            [
+                "6a2c7ee188d85b7b"
+            ]
+        ]
+    },
+    {
+        "id": "6a2c7ee188d85b7b",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "098fd1f62104a520",
+        "name": "Template Descrição VOCs",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 700,
+        "y": 900,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c58d198ed383a994",
+        "type": "ui_gauge",
+        "z": "8c38b50192445feb",
+        "name": "NOx",
+        "group": "7b643a2e28487b6c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "NOx",
+        "label": "Índice",
+        "format": "{{msg.payload.noxIndex}}",
+        "min": 0,
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "200",
+        "seg2": "300",
+        "diff": false,
+        "className": "",
+        "x": 350,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "c1751d235c630a67",
+        "type": "function",
+        "z": "8c38b50192445feb",
+        "name": "Function Descrição NOx",
+        "func": "var nox = msg.payload.noxIndex;\nlet descricao = \"\";\nlet classe = \"\";\n\nif (nox <= 100) {\n    descricao = \"Ar limpo. Baixa presença de gases de combustão.\";\n    classe = \"ok\";\n} else if (nox <= 300) {\n    descricao = \"Presença moderada de gases de combustão.\";\n    classe = \"alerta\";\n} else {\n    descricao = \"Alta presença de gases de combustão. Pode causar desconforto respiratório.\";\n    classe = \"critico\";\n}\n\nmsg.payload = {\n    valor: nox,\n    texto: descricao,\n    classe: classe\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 980,
+        "wires": [
+            [
+                "a17717e89d091403"
+            ]
+        ]
+    },
+    {
+        "id": "a17717e89d091403",
+        "type": "ui_template",
+        "z": "8c38b50192445feb",
+        "group": "7b643a2e28487b6c",
+        "name": "Template Descrição NOx",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-class=\"msg.payload.classe\" style=\"padding:8px; border-radius:6px; text-align:center; font-size:14px;\">\n    {{msg.payload.texto}}\n</div>\n\n<style>\n    .ok {\n        background-color: #e8f5e9;\n        color: #2e7d32;\n    }\n\n    .alerta {\n        background-color: #fff8e1;\n        color: #f57f17;\n    }\n\n    .critico {\n        background-color: #ffebee;\n        color: #c62828;\n        font-weight: bold;\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 690,
+        "y": 980,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "697ca0f86304db19",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "3f0c8d0901e3df8d",
+        "order": 3,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "9096520483c93898",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "3f0c8d0901e3df8d",
+        "order": 6,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "b5364900b8d3ee1d",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "3f0c8d0901e3df8d",
+        "order": 5,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "85c07b5bdd8edd34",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "fc4314058b2283d4",
+        "order": 3,
+        "width": "1",
+        "height": "16"
+    },
+    {
+        "id": "61d2e2a2e1e7572d",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "59d3c735432b9ed5",
+        "order": 1,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "9a0e81ad82917949",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "b7a3f6740d80373e",
+        "order": 1,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "1138a0ad263c891c",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "b8ec7e3ccdbbed5d",
+        "order": 1,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "bea08120e1eaa3c8",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "58b327156e6e5dca",
+        "order": 1,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "3a721b4a5473b4be",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "8395f219494ebd3b",
+        "order": 1,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "b2c8dea0fb132cfb",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "098fd1f62104a520",
+        "order": 1,
+        "width": "6",
+        "height": "1"
+    },
+    {
+        "id": "369478fe28c7fe7d",
+        "type": "ui_spacer",
+        "z": "8c38b50192445feb",
+        "name": "spacer",
+        "group": "7b643a2e28487b6c",
+        "order": 1,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "mqtt_broker",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Broker",
+        "broker": "192.168.50.20",
+        "port": "1883",
+        "clientid": "node-red-client",
+        "autoConnect": true,
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "mysql-config",
+        "type": "MySQLdatabase",
+        "name": "MySQL Sens",
+        "host": "192.168.50.20",
+        "port": "3306",
+        "db": "sens",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "59d3c735432b9ed5",
+        "type": "ui_group",
+        "name": "Temperatura",
+        "tab": "d7f46074bf72a06d",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1c58a85e3c73c25b",
+        "type": "ui_group",
+        "name": "Umidade",
+        "tab": "d7f46074bf72a06d",
+        "order": 9,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c951409f2207c557",
+        "type": "ui_group",
+        "name": "Gás carbônico (CO₂)",
+        "tab": "d7f46074bf72a06d",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b7a3f6740d80373e",
+        "type": "ui_group",
+        "name": "Material particulado (PM 1.0)",
+        "tab": "d7f46074bf72a06d",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "0c51e0174d4fac62",
+        "type": "ui_group",
+        "name": "Histórico",
+        "tab": "6973a387986030bb",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b8ec7e3ccdbbed5d",
+        "type": "ui_group",
+        "name": "Material particulado (PM 2.5)",
+        "tab": "d7f46074bf72a06d",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "58b327156e6e5dca",
+        "type": "ui_group",
+        "name": "Material particulado (PM 4.0)",
+        "tab": "d7f46074bf72a06d",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8395f219494ebd3b",
+        "type": "ui_group",
+        "name": "Material particulado (PM 10.0)",
+        "tab": "d7f46074bf72a06d",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "098fd1f62104a520",
+        "type": "ui_group",
+        "name": "Compostos orgânicos voláteis (VOCs)",
+        "tab": "d7f46074bf72a06d",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5950987235260d82",
+        "type": "ui_group",
+        "name": "Home",
+        "tab": "17aad7037f9877bc",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ade3b21ccc7debf3",
+        "type": "ui_group",
+        "name": "Informações",
+        "tab": "ecb2139c75c036f9",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7b643a2e28487b6c",
+        "type": "ui_group",
+        "name": "Óxidos de nitrogênio (NOx)",
+        "tab": "d7f46074bf72a06d",
+        "order": 7,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d7f46074bf72a06d",
+        "type": "ui_tab",
+        "name": "Leitura dos sensores",
+        "icon": "dashboard",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "6973a387986030bb",
+        "type": "ui_tab",
+        "name": "Histórico",
+        "icon": "dashboard",
+        "order": 6,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "17aad7037f9877bc",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ecb2139c75c036f9",
+        "type": "ui_tab",
+        "name": "Informações",
+        "icon": "dashboard",
+        "order": 7,
+        "disabled": false,
+        "hidden": false
+    }
+]

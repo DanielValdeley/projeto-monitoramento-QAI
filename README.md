@@ -10,7 +10,7 @@ Código do desenvolvimento
 - Escutar canal mosquitto
 
 ```bash
-mosquitto_sub -h 192.168.50.20 -t "sensores/temp" -u <usuario> -P <senha>
+mosquitto_sub -h 192.168.50.20 -t "sensores/esp32" -u <usuario> -P <senha>
 ```
 
 ### Resultado DashBoard - Node-RED
